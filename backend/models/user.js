@@ -1,14 +1,16 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const userSchema = mongoose.Schema({
-  email: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true },
   password: { type: String, required: true }
-});
+  });
 
 userSchema.plugin(uniqueValidator);
 
-module.exports = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
 
 exports.login = (req, res, next) => {
   User.findOne({ email: req.body.email })
@@ -34,3 +36,5 @@ exports.login = (req, res, next) => {
       })
       .catch(error => res.status(500).json({ error }));
 };
+
+module.exports = User;
