@@ -5,6 +5,8 @@ const rateLimit = require("express-rate-limit");
 const mongoose = require('mongoose');
 const path = require('path');
 const app = express();
+const helmet = require("helmet");
+const mongoSanitize = require('express-mongo-sanitize');
 
 dotenv.config();
 
@@ -33,7 +35,12 @@ const limitUserLogin = rateLimit({
   message: "Vous avez effectué trop de requêtes"
 });
 
-
+app.use(mongoSanitize())
+app.use(
+  helmet({
+    crossOriginResourcePolicy: false,
+  })
+);
 
 app.use(limitUserLogin);
 app.use(express.urlencoded({ extended: true }));
